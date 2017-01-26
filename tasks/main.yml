@@ -1,0 +1,63 @@
+---
+- include_vars: "{{ include_vars }}"
+
+- set_fact:
+    db_conf: "{{ databases[env] }}"
+
+- name: PHPMyAdmin is removed.
+  apt: pkg=phpmyadmin state=absent
+  sudo: true
+
+- name: PHPMyAdmin Extract package
+  unarchive:
+    src: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-english.tar.gz
+    dest: /tmp/
+    remote_src: true
+    validate_certs: no
+  become: yes
+
+- name: PHPMyAdmin remove /usr/share/phpmyadmin
+  file:
+    path: /usr/share/phpmyadmin
+    state: absent
+  become: yes
+
+- name: PHPMyAdmin copy to /usr/share/phpmyadmin
+  command: mv /tmp/phpMyAdmin-{{ phpmyadmin_version }}-english /usr/share/phpmyadmin
+  become: yes
+
+- name: PHPMyAdmin change owner to /usr/share/phpmyadmin
+  file:
+    path: /usr/share/phpmyadmin
+    owner: 'www-data'
+    recurse: yes
+  become: yes
+
+- name: PHPMyAdmin ensures /etc/phpmyadmin dir exists
+  file: path=/etc/phpmyadmin state=directory
+  become: yes
+
+- name: PHPMyAdmin set custom config-db file
+  template: src=etc/phpmyadmin/config-db.php.j2 dest=/etc/phpmyadmin/config-db.php
+  become: true
+
+- name: PHPMyAdmin set custom config file
+  template: src=etc/phpmyadmin/config.inc.php.j2 dest=/etc/phpmyadmin/config.inc.php
+  become: true
+
+- name: PHPMyAdmin set custom vhost file
+  template: src=etc/phpmyadmin/apache.conf.j2 dest=/etc/phpmyadmin/apache.conf
+  become: true
+
+- name: Ensure PHPMyAdmin config file is included in Apache config.
+  lineinfile: >
+    dest=/etc/apache2/apache2.conf
+    state=present
+    regexp="^Include.+phpmyadmin.+$"
+    line="Include /etc/phpmyadmin/apache.conf"
+    insertafter="EOF"
+  become: true
+
+- name: Restart apache
+  service: name=apache2 state=restarted
+  become: yes

@@ -1,0 +1,11 @@
+---
+phpmyadmin_version: 4.6.5.1
+phpmyadmin_alias: phpmyadmin
+db_auth_ips:
+  - 10.10.10.1
+db_host: localhost
+db_root_usr: root
+db_root_pwd: root
+db_name: test-db
+db_user: test-usr
+db_password: test-pwd
