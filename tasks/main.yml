@@ -8,13 +8,17 @@
   apt: pkg=phpmyadmin state=absent
   sudo: true
 
-- name: PHPMyAdmin Extract package
-  unarchive:
-    src: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-english.tar.gz
+- name: PHPMyAdmin download package
+  get_url:
+    url: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-english.tar.gz
     dest: /tmp/
-    remote_src: true
-    validate_certs: no
+
+- name: PHPMyAdmin Extract package
   become: yes
+  unarchive:
+    src: /tmp/phpMyAdmin-{{ phpmyadmin_version }}-english.tar.gz
+    dest: /tmp/
+    copy: no
 
 - name: PHPMyAdmin remove /usr/share/phpmyadmin
   file:
