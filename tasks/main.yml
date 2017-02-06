@@ -12,6 +12,7 @@
   get_url:
     url: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-english.tar.gz
     dest: /tmp/
+    validate_certs: no
 
 - name: PHPMyAdmin Extract package
   become: yes
