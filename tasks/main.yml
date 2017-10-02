@@ -6,7 +6,7 @@
 
 - name: PHPMyAdmin is removed.
   apt: pkg=phpmyadmin state=absent
-  sudo: true
+  become: true
 
 - name: PHPMyAdmin download package
   get_url:
