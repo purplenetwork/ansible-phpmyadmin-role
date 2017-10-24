@@ -50,6 +50,11 @@
   template: src=etc/phpmyadmin/config.inc.php.j2 dest=/etc/phpmyadmin/config.inc.php
   become: true
 
+- name: Add basic auth file
+  template: src=htpasswd.conf.j2 dest=/home/ubuntu/.htpasswd
+  become: true
+  when: db_conf.basic_auth_user is defined and db_conf.basic_auth_pwd is defined
+
 - name: PHPMyAdmin set custom vhost file
   template: src=etc/phpmyadmin/apache.conf.j2 dest=/etc/phpmyadmin/apache.conf
   become: true

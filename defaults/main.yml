@@ -1,8 +1,10 @@
 ---
 phpmyadmin_version: 4.6.5.1
 phpmyadmin_alias: phpmyadmin
-db_auth_ips:
+db_auth_ips: # a precedenza sulla basic auth
   - 10.10.10.1
+basic_auth_user: some-user #Da definire solo se si vuole aggiungere la basic auth. Es. admin
+basic_auth_pwd: some-encrypted-htpasswd
 db_host: localhost
 db_root_usr: root
 db_root_pwd: root
