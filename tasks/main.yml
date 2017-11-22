@@ -68,6 +68,13 @@
     insertafter="EOF"
   become: true
 
+- name: Create link to PMA toplevel directory for config.inc.php
+  file:
+    src: /etc/phpmyadmin/config.inc.php
+    dest: /usr/share/phpmyadmin/config.inc.php
+    state: link
+  become: yes
+
 - name: Restart apache
   service: name=apache2 state=restarted
   become: yes
