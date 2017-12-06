@@ -14,7 +14,7 @@ Alias /dbadmin /usr/share/phpmyadmin
         {% endfor %}
         Allow from env=AllowAccess
         Deny from all
-    {% else if db_conf.basic_auth_user is defined and db_conf.basic_auth_pwd is defined %}
+    {% elif db_conf.basic_auth_user is defined and db_conf.basic_auth_pwd is defined %}
       AuthType Basic
       AuthName "Authentication Required"
       AuthUserFile "/home/ubuntu/.htpasswd"
