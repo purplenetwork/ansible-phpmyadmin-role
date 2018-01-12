@@ -2,19 +2,14 @@
 
 Alias /dbadmin /usr/share/phpmyadmin
 
+RewriteOptions InheritDown
+RewriteRule ^/dbadmin/(.*)$ https://%{HTTP_HOST}/dbadmin/$1 [NC,R=301,L]
+
 <Directory /usr/share/phpmyadmin>
 	Options FollowSymLinks
 	DirectoryIndex index.php
 
-    {% if db_conf.auth_ips is defined %}
-        Order Deny,Allow
-        {% for auth_ip in db_conf.auth_ips %}
-        SetEnvIf X-Forwarded-For "{{auth_ip}}" AllowAccess
-        Allow from {{auth_ip}}
-        {% endfor %}
-        Allow from env=AllowAccess
-        Deny from all
-    {% elif db_conf.basic_auth_user is defined and db_conf.basic_auth_pwd is defined %}
+    {% if db_conf.basic_auth_user is defined and db_conf.basic_auth_pwd is defined %}
       AuthType Basic
       AuthName "Authentication Required"
       AuthUserFile "/home/ubuntu/.htpasswd"
