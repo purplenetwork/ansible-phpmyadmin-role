@@ -2,7 +2,13 @@
 
 Alias /dbadmin /usr/share/phpmyadmin
 
-RewriteOptions InheritDown
+#for ssl termination on Loadbalancer or Proxy
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^/dbadmin/(.*)$ https://%{HTTP_HOST}/dbadmin/$1 [NC,R=301,L]
+
+#for ssl local
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} ^$
 RewriteRule ^/dbadmin/(.*)$ https://%{HTTP_HOST}/dbadmin/$1 [NC,R=301,L]
 
 <Directory /usr/share/phpmyadmin>
